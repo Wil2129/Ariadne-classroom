@@ -19,7 +19,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `hng_classroom`
+-- Database: `hng_class`
 --
 
 -- --------------------------------------------------------
@@ -96,6 +96,22 @@ INSERT INTO `subjects` (`id`, `name`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `students`
+--
+
+DROP TABLE IF EXISTS `students`;
+CREATE TABLE IF NOT EXISTS `students` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(200) NOT NULL,
+  `username` varchar(50) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `teacher`
 --
 
@@ -109,6 +125,32 @@ CREATE TABLE IF NOT EXISTS `teacher` (
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+
+DROP TABLE IF EXISTS `classes_students` ;
+
+CREATE TABLE IF NOT EXISTS `classes_students` (
+  `class_id` INT NOT NULL,
+  `teacher_id` INT NOT NULL,
+  `student_id` INT NOT NULL,
+  PRIMARY KEY (`class_id`, `teacher_id`, `student_id`),
+  CONSTRAINT `fk_classes_classes`
+    FOREIGN KEY (`class_id` , `teacher_id`)
+    REFERENCES `classes` (`id` , `teacher_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_classes_students`
+    FOREIGN KEY (`student_id`)
+    REFERENCES `students` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = MyISAM;
+
+SHOW WARNINGS;
+CREATE INDEX `fk_classes_students_idx` ON `classes_students` (`student_id` ASC) VISIBLE;
+
+SHOW WARNINGS;
+CREATE INDEX `fk_students_classes_idx` ON `classes_students` (`class_id` ASC, `teacher_id` ASC) VISIBLE;
+
 
 --
 -- Dumping data for table `teacher`

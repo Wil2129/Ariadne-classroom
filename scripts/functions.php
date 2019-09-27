@@ -16,6 +16,35 @@ function dbConnect()
     }
 }
 
+function register_student($name, $username, $passwordt)
+{
+    $name = clean_input($name);
+    $username = clean_input($username);
+	$password = md5($password);
+    try {
+        $handle = dbConnect();
+        $stmt = $handle->prepare("INSERT INTO students (`name`,`username`,`password`) 
+                                        VALUES (:name, :uname, :pswd)");
+        $stmt->execute(array(':name' => $name, ':uname' => $username, ':pswd' => $password));
+        return true;
+    } catch (PDOException $e) {
+        echo $e->getMessage();
+    }
+}
+
+function login_student()
+{
+    try {
+        $handle = dbConnect();
+        $stmt = $handle->prepare("SELECT * FROM students");
+        $stmt->execute();
+        $students = $stmt->fetchAll();
+        return $students;
+    } catch (PDOException $e) {
+        echo $e->getMessage();
+    }
+}
+
 function register_teacher($name, $username, $password, $subject)
 {
     $name = clean_input($name);
